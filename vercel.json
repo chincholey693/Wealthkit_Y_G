@@ -1,0 +1,40 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["bom1"],
+  "functions": {
+    "app/api/**": {
+      "maxDuration": 30
+    },
+    "app/api/proposals/[id]/generate-pdf/**": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_APP_NAME": "WealthKit"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/reset-pdf-counts",
+      "schedule": "0 0 1 * *"
+    },
+    {
+      "path": "/api/cron/send-renewal-reminders",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}
